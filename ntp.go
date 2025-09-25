@@ -585,7 +585,7 @@ func getTime(address string, opt *QueryOptions) (*header, ntpTime, error) {
 	// Keep track of the time the response was received. As of go 1.9, the
 	// time package uses a monotonic clock, so delta will never be less than
 	// zero for go version 1.9 or higher.
-	delta := time.Since(xmitTime)
+	delta := Now().Sub(xmitTime)
 	if delta < 0 {
 		delta = 0
 	}
