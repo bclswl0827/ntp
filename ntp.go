@@ -24,6 +24,10 @@ import (
 	"golang.org/x/net/ipv4"
 )
 
+type TimeFunc func() time.Time
+
+var Now TimeFunc = time.Now
+
 var (
 	ErrAuthFailed             = errors.New("authentication failed")
 	ErrInvalidAuthKey         = errors.New("invalid authentication key")
@@ -459,16 +463,16 @@ func QueryWithOptions(address string, opt QueryOptions) (*Response, error) {
 func Time(address string) (time.Time, error) {
 	r, err := Query(address)
 	if err != nil {
-		return time.Now(), err
+		return Now(), err
 	}
 
 	err = r.Validate()
 	if err != nil {
-		return time.Now(), err
+		return Now(), err
 	}
 
 	// Use the response's clock offset to calculate an accurate time.
-	return time.Now().Add(r.ClockOffset), nil
+	return Now().Add(r.ClockOffset), nil
 }
 
 // getTime performs the NTP server query and returns the response header
@@ -566,7 +570,7 @@ func getTime(address string, opt *QueryOptions) (*header, ntpTime, error) {
 	appendMAC(&xmitBuf, opt.Auth, authKey)
 
 	// Transmit the query and keep track of when it was transmitted.
-	xmitTime := time.Now()
+	xmitTime := Now()
 	_, err = con.Write(xmitBuf.Bytes())
 	if err != nil {
 		return nil, 0, err

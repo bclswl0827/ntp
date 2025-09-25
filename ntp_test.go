@@ -17,7 +17,7 @@ import (
 
 // The NTP server to use for online unit tests. May be overridden by the
 // NTP_HOST environment variable.
-var host string = "0.beevik-ntp.pool.ntp.org"
+var host string = "0.pool.ntp.org"
 
 const (
 	refID      = 0xc0a80001
